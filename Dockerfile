@@ -58,6 +58,10 @@ RUN git clone --single-branch --branch ${RMG_Py_Branch} --depth 1 https://github
 
 WORKDIR /rmg/RMG-Py
 
+# Accept ToS for conda
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
 # build the conda environment
 RUN conda env create --file environment.yml
 # Remove conda package cache to reduce image size
