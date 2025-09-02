@@ -73,7 +73,7 @@ from rmgpy.qm.main import QMDatabaseWriter
 from rmgpy.reaction import Reaction
 from rmgpy.rmg.listener import SimulationProfilePlotter, SimulationProfileWriter
 from rmgpy.rmg.model import CoreEdgeReactionModel, Species
-from rmgpy.rmg.output import OutputHTMLWriter
+from rmgpy.rmg.output import OutputHTMLWriter, OutputLabeledReactionsWriter
 from rmgpy.rmg.pdep import PDepNetwork, PDepReaction
 from rmgpy.rmg.reactionmechanismsimulator_reactors import Reactor as RMSReactor
 from rmgpy.rmg.settings import ModelSettings
@@ -142,6 +142,7 @@ class RMG(util.Subject):
     `verbosity`                                                The level of logging verbosity for console output
     `units`                                                    The unit system to use to save output files (currently must be 'si')
     `generate_output_html`                                     ``True`` to draw pictures of the species and reactions, saving a visualized model in an output HTML file.  ``False`` otherwise
+    `generate_labeled_reactions`                               ``True`` to export labeled adjacency lists for reactions in a text file
     `generate_plots`                                           ``True`` to generate plots of the job execution statistics after each iteration, ``False`` otherwise
     `verbose_comments`                                         ``True`` to keep the verbose comments for database estimates, ``False`` otherwise
     `save_edge_species`                                        ``True`` to save chemkin and HTML files of the edge species, ``False`` otherwise
@@ -221,6 +222,7 @@ class RMG(util.Subject):
         self.verbosity = logging.INFO
         self.units = "si"
         self.generate_output_html = None
+        self.generate_labeled_reactions = None
         self.generate_plots = None
         self.save_simulation_profiles = None
         self.verbose_comments = None
@@ -773,6 +775,9 @@ class RMG(util.Subject):
 
         if self.generate_output_html:
             self.attach(OutputHTMLWriter(self.output_directory))
+
+        if self.generate_labeled_reactions:
+            self.attach(OutputLabeledReactionsWriter(self.output_directory))
 
         if self.quantum_mechanics:
             self.attach(QMDatabaseWriter())
